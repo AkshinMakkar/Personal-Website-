@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check-In - Akshin Makkar</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 22'%3E%3Ccircle cx='9' cy='3.5' r='2.5' stroke='%23f0f0ee' stroke-width='1.2' fill='none'/%3E%3Cline x1='9' y1='6' x2='9' y2='13' stroke='%23f0f0ee' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='9' y1='8.5' x2='3.5' y2='11.5' stroke='%23f0f0ee' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='9' y1='8.5' x2='14.5' y2='11.5' stroke='%23f0f0ee' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='9' y1='13' x2='5' y2='20' stroke='%23f0f0ee' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='9' y1='13' x2='13' y2='20' stroke='%23f0f0ee' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080808;
+      --fg: #f0f0ee;
+      --muted: #888884;
+      --subtle: #2a2a28;
+      --border: #1a1a18;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Inter", -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 56px;
+      height: 64px;
+      background: rgba(8,8,8,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-back {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover { color: var(--fg); }
+
+    /* LAYOUT */
+    main {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 32px 120px;
+    }
+
+    /* HERO */
+    #hero {
+      padding-top: 140px;
+      padding-bottom: 64px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 500px; height: 350px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(100,160,255,0.07) 0%, transparent 70%);
+      top: 80px; left: -80px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-inner { position: relative; z-index: 1; }
+
+    .project-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.6;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 5.5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    h1 em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--muted);
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .meta-item { display: flex; flex-direction: column; gap: 3px; }
+
+    .meta-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.6;
+    }
+
+    .meta-value {
+      font-size: 13px;
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 580px;
+      margin-bottom: 28px;
+    }
+
+    .hero-desc strong { color: var(--fg); font-weight: 500; }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px 12px;
+      letter-spacing: 0.02em;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 20px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+      background: rgba(240,240,238,0.15);
+      color: rgba(240,240,238,0.6);
+      border: 1px solid rgba(240,240,238,0.2);
+      transition: all 0.2s;
+      margin-bottom: 28px;
+    }
+
+    .cta-btn:hover { background: rgba(240,240,238,0.22); color: rgba(240,240,238,0.8); transform: translateY(-1px); }
+
+    /* CONTENT */
+    .content-section {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .content-section:last-child { border-bottom: none; }
+
+    .section-wrap {
+      position: relative;
+      margin-bottom: 32px;
+    }
+
+    .section-ghost {
+      position: absolute;
+      right: 0; top: -24px;
+      font-size: 80px;
+      font-weight: 800;
+      letter-spacing: -3px;
+      color: rgba(255,255,255,0.025);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.6;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    p:last-child { margin-bottom: 0; }
+    p strong { color: var(--fg); font-weight: 500; }
+
+    /* PROBLEM CARDS */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .problem-card {
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.015);
+    }
+
+    .problem-icon {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .problem-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--fg);
+      margin-bottom: 6px;
+    }
+
+    .problem-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* FEATURE CARDS */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .feature-card {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.015);
+      transition: background 0.2s, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+    }
+
+    .feature-card:hover {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .feature-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--fg);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 24px;
+    }
+
+    .stat {
+      background: var(--bg);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--fg);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    /* PARTNERS */
+    .partners-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 24px;
+    }
+
+    .partner-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.015);
+      font-size: 14px;
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    .partner-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* HERO ANIM */
+    .hero-inner > * {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: rise 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero-inner > *:nth-child(1) { animation-delay: 0.05s; }
+    .hero-inner > *:nth-child(2) { animation-delay: 0.15s; }
+    .hero-inner > *:nth-child(3) { animation-delay: 0.25s; }
+    .hero-inner > *:nth-child(4) { animation-delay: 0.35s; }
+    .hero-inner > *:nth-child(5) { animation-delay: 0.45s; }
+    .hero-inner > *:nth-child(6) { animation-delay: 0.55s; }
+
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+    .star-tooltip {
+      position: fixed;
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(240,240,238,0.7);
+      background: rgba(8,8,8,0.85);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 5px 10px;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    footer {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid var(--border);
+      padding: 28px 56px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+      opacity: 0.5;
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      main { padding: 0 20px 80px; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 6px; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="stars"></canvas>
+  <div class="star-tooltip" id="tooltip"></div>
+
+  <nav>
+    <a class="nav-logo" href="index.html">
+      <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.7;flex-shrink:0;">
+        <circle cx="9" cy="3.5" r="2.5" stroke="#f0f0ee" stroke-width="1.2"/>
+        <line x1="9" y1="6" x2="9" y2="13" stroke="#f0f0ee" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="9" y1="8.5" x2="3.5" y2="11.5" stroke="#f0f0ee" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="9" y1="8.5" x2="14.5" y2="11.5" stroke="#f0f0ee" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="9" y1="13" x2="5" y2="20" stroke="#f0f0ee" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="9" y1="13" x2="13" y2="20" stroke="#f0f0ee" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      Akshin Makkar
+    </a>
+    <a class="nav-back" href="index.html">← Back</a>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="hero-glow"></div>
+      <div class="hero-inner">
+
+        <p class="project-eyebrow">Project - 2025</p>
+
+        <h1>Check-In.<br><em>Community safety,<br>reimagined.</em></h1>
+
+        <div class="hero-meta">
+          <div class="meta-item">
+            <span class="meta-label">Year</span>
+            <span class="meta-value">2025 - Present</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Role</span>
+            <span class="meta-value">Co-Founder</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Domain</span>
+            <span class="meta-value">Community Safety · AI</span>
+          </div>
+        </div>
+
+        <p class="hero-desc">
+          Check-In is an <strong>all-in-one community safety platform</strong> that connects residents, moderators,
+          and security companies together - ensuring neighbourhoods stay informed, coordinated, and safe in real time.
+          What started as a coordination problem in one neighbourhood grew into a platform serving
+          <strong>10,000+ users</strong> across Toronto and Halton Region.
+        </p>
+
+        <a class="cta-btn" href="https://thecheckin.ca" target="_blank" rel="noopener">Visit Check-In ↗</a>
+
+        <div class="tag-row">
+          <span class="tag">React</span>
+          <span class="tag">MongoDB</span>
+          <span class="tag">Firebase</span>
+          <span class="tag">Claude API</span>
+          <span class="tag">GPT-4</span>
+          <span class="tag">Real-time</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ORIGIN -->
+    <div class="content-section reveal">
+      <div class="section-wrap">
+        <span class="section-ghost">01</span>
+        <p class="section-label">Origin</p>
+      </div>
+      <h2>How it started</h2>
+      <p>
+        Our neighbourhood already had a security guard - a strong foundation. But as the community grew,
+        coordination issues started to surface: <strong>missed messages, response delays, and unclear visibility</strong>
+        into what was actually happening on the ground.
+      </p>
+      <p>
+        The tools people were using - group chats, phone calls, manual check-ins - weren't built for this.
+        There was no central place to see what was going on, no structured way for the moderator to communicate with residents,
+        and no way for the security company to stay looped in.
+      </p>
+      <p>
+        Check-In was built to solve exactly that - a purpose-built platform that brings everyone into one place.
+      </p>
+    </div>
+
+    <!-- PROBLEM -->
+    <div class="content-section reveal">
+      <div class="section-wrap">
+        <span class="section-ghost">02</span>
+        <p class="section-label">The Problem</p>
+      </div>
+      <h2>Three groups, three problems</h2>
+      <p>Crime is rising, yet communities lack a unified, community-driven platform for real-time communication and geographic crime visibility. Check-In fills that gap.</p>
+
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="5" r="2.5" stroke="white" stroke-width="1.2"/>
+              <path d="M3 13c0-2.761 2.239-5 5-5s5 2.239 5 5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="problem-title">Residents</div>
+          <p class="problem-desc">No easy way to flag concerns or get visual updates when something feels off in the neighbourhood.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="7" cy="7" r="4" stroke="white" stroke-width="1.2"/>
+              <line x1="10" y1="10" x2="14" y2="14" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="problem-title">Moderators</div>
+          <p class="problem-desc">Without structured communication, moderators struggle to monitor conversations - leading to false alarms and duplicated efforts.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 2L3 4.5V8c0 3 2.5 5 5 5.5C11 13 13.5 11 13.5 8V4.5L8 2z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="problem-title">Security Companies</div>
+          <p class="problem-desc">Lack of direct resident communication channels and payment collection issues hinder their ability to deliver their best service.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOLUTION -->
+    <div class="content-section reveal">
+      <div class="section-wrap">
+        <span class="section-ghost">03</span>
+        <p class="section-label">The Solution</p>
+      </div>
+      <h2>What Check-In does</h2>
+      <p>
+        Check-In is designed to bridge residents, security providers, and law enforcement - each getting their own
+        tailored variation of the product.
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-title">Real-Time Map Pinging</div>
+          <p class="feature-desc">Any community member can drop a pin on the map, attach an image, and add a brief description of suspicious activity witnessed in the neighbourhood.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-title">Organized Group Chat</div>
+          <p class="feature-desc">An efficient messaging system that lets members communicate with each other and allows the moderator to broadcast updates about active concerns.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-title">AI-Powered Analysis</div>
+          <p class="feature-desc">Our AI system - powered by Claude and GPT-4 - analyzes community data and delivers a weekly report on suspicious activity trends in the neighbourhood.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-title">Customized by Role</div>
+          <p class="feature-desc">Residents, security providers, and law enforcement each get their own tailored interface - purpose-built for how they actually interact with the platform.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACTION -->
+    <div class="content-section reveal">
+      <div class="section-wrap">
+        <span class="section-ghost">04</span>
+        <p class="section-label">Traction</p>
+      </div>
+      <h2>Growth since launch</h2>
+
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-value">10k+</span>
+          <span class="stat-label">Users across Toronto & Halton Region</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">$750+</span>
+          <span class="stat-label">In grants received</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">40%</span>
+          <span class="stat-label">Reduction in dev cycle time via AI workflows</span>
+        </div>
+      </div>
+
+      <p style="margin-top:32px; margin-bottom:12px; font-size:14px; font-weight:600; color:var(--fg);">Partners</p>
+      <div class="partners-list">
+        <div class="partner-item"><div class="partner-dot"></div>Halton Crime Stoppers <span style="font-size:12px;color:var(--muted);opacity:0.5;font-weight:400;margin-left:8px;">· directly partnered with Halton Regional Police Service</span></div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="content-section reveal">
+      <div class="section-wrap">
+        <span class="section-ghost">05</span>
+        <p class="section-label">Get Involved</p>
+      </div>
+      <h2>Interested in Check-In?</h2>
+      <p>Whether you're a crime prevention organization, a security guard company, or just someone who wants to learn more about what we're building - we'd love to hear from you.</p>
+      <a href="mailto:team@thecheckin.ca" style="display:inline-flex;align-items:center;justify-content:space-between;width:100%;padding:20px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-decoration:none;color:var(--fg);transition:opacity 0.2s;margin-top:24px;" onmouseover="this.style.opacity='0.6'" onmouseout="this.style.opacity='1'">
+        <div style="display:flex;align-items:center;gap:20px;">
+          <span style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);opacity:0.7;min-width:80px;">Email</span>
+          <span style="font-size:14px;">team@thecheckin.ca</span>
+        </div>
+        <span style="font-size:14px;color:var(--muted);opacity:0.5;">↗</span>
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    <span>© 2026 Akshin Makkar</span>
+    <span>Toronto, ON</span>
+  </footer>
+
+  <script>
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+
+  const STREAK_COLORS = ['180,140,255','120,190,255','255,180,100','100,220,180'];
+  let streaks = [], stars = [];
+  let W, H, t = 0;
+  let nextStreak = Date.now() + 1200;
+
+  function makeStreak() {
+    const angle = (Math.random() * 30 + 20) * (Math.PI / 180) * (Math.random() < 0.5 ? 1 : -1);
+    return {
+      x: Math.random() * W, y: Math.random() * H,
+      angle, len: 180 + Math.random() * 260,
+      color: STREAK_COLORS[Math.floor(Math.random() * STREAK_COLORS.length)],
+      life: 1.0, decay: 0.018 + Math.random() * 0.012,
+    };
+  }
+
+  function scheduleStreak() { nextStreak = Date.now() + 1800 + Math.random() * 3000; }
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    stars = Array.from({ length: 180 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: 0.4 + Math.random() * 0.8,
+      twinkleOffset: Math.random() * Math.PI * 2,
+      twinkleSpeed: 0.3 + Math.random() * 0.8,
+      opacity: 0,
+      targetOpacity: 0.1 + Math.random() * 0.2,
+      floatAngle: Math.random() * Math.PI * 2,
+      floatSpeed: 0.05 + Math.random() * 0.1,
+      floatRadius: 3 + Math.random() * 5,
+    }));
+    stars.forEach(s => { s.initX = s.x; s.initY = s.y; });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.008;
+
+    for (const s of stars) {
+      if (s.opacity < s.targetOpacity) s.opacity = Math.min(s.targetOpacity, s.opacity + 0.002);
+      s.floatAngle += s.floatSpeed * 0.01;
+      s.x = s.initX + Math.cos(s.floatAngle) * s.floatRadius;
+      s.y = s.initY + Math.sin(s.floatAngle) * s.floatRadius;
+      const twinkle = Math.sin(t * s.twinkleSpeed + s.twinkleOffset) * 0.1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${Math.max(0, s.opacity + twinkle)})`;
+      ctx.fill();
+    }
+
+    if (Date.now() > nextStreak) { streaks.push(makeStreak()); scheduleStreak(); }
+
+    ctx.save(); ctx.lineCap = 'round';
+    for (let i = streaks.length - 1; i >= 0; i--) {
+      const s = streaks[i];
+      s.life -= s.decay;
+      if (s.life <= 0) { streaks.splice(i, 1); continue; }
+      const ease = s.life < 0.3 ? s.life / 0.3 : 1;
+      const tx = s.x + Math.cos(s.angle) * s.len;
+      const ty = s.y + Math.sin(s.angle) * s.len;
+
+      const g1 = ctx.createLinearGradient(s.x, s.y, tx, ty);
+      g1.addColorStop(0, `rgba(${s.color},0)`);
+      g1.addColorStop(0.3, `rgba(${s.color},${0.18*ease})`);
+      g1.addColorStop(1, `rgba(${s.color},0)`);
+      ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(tx,ty);
+      ctx.strokeStyle = g1; ctx.lineWidth = 14; ctx.stroke();
+
+      const g2 = ctx.createLinearGradient(s.x, s.y, tx, ty);
+      g2.addColorStop(0, `rgba(${s.color},0)`);
+      g2.addColorStop(0.4, `rgba(${s.color},${0.55*ease})`);
+      g2.addColorStop(1, `rgba(255,255,255,${0.4*ease})`);
+      ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(tx,ty);
+      ctx.strokeStyle = g2; ctx.lineWidth = 4; ctx.stroke();
+
+      const g3 = ctx.createLinearGradient(s.x, s.y, tx, ty);
+      g3.addColorStop(0, `rgba(${s.color},0)`);
+      g3.addColorStop(0.6, `rgba(255,255,255,${0.3*ease})`);
+      g3.addColorStop(1, `rgba(255,255,255,${0.9*ease})`);
+      ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(tx,ty);
+      ctx.strokeStyle = g3; ctx.lineWidth = 1.2; ctx.stroke();
+    }
+    ctx.restore();
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize(); draw();
+
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.06 });
+  reveals.forEach(el => obs.observe(el));
+  </script>
+
+</body>
+</html>
