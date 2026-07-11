@@ -369,6 +369,10 @@
     .fellowship-item:hover { opacity: 0.7; }
     .fellowship-item:last-child { border-bottom: none; }
 
+    .fellowship-toggle {
+      display: none;
+    }
+
     .fellowship-arrow {
       font-size: 16px;
       color: var(--muted);
@@ -720,9 +724,38 @@
       .proj-year { display: none; }
 
       /* Fellowships */
-      .fellowship-item { grid-template-columns: 1fr; gap: 6px; padding: 20px 0; }
-      .fellowship-desc { display: none; }
+      .fellowship-item { grid-template-columns: 1fr auto; gap: 6px; padding: 20px 0; align-items: start; }
+      .fellowship-left { grid-column: 1; }
+      .fellowship-desc {
+        display: none;
+        grid-column: 1 / -1;
+        font-size: 13px;
+        padding-top: 10px;
+        line-height: 1.7;
+      }
+      .fellowship-desc.open { display: block; }
       .fellowship-name { font-size: 14px; }
+      .fellowship-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        border-radius: 50%;
+        width: 26px;
+        height: 26px;
+        font-size: 16px;
+        line-height: 1;
+        cursor: pointer;
+        flex-shrink: 0;
+        margin-top: 2px;
+        transition: transform 0.2s, color 0.2s;
+      }
+      .fellowship-toggle.open {
+        transform: rotate(45deg);
+        color: var(--fg);
+      }
 
       /* Resources */
       .resource-cols { grid-template-columns: 1fr; gap: 32px; }
@@ -846,7 +879,7 @@
             <ul class="exp-bullets">
               <li>Built AI-assisted data pipelines (Python, SQL, Airtable, Zapier) to automate deal flow tracking across 8+ internal systems.</li>
               <li>Built a web scraper with LLM-powered data extraction to enrich startup datasets, saving 30+ hours/month.</li>
-              <li>Designed automation tools used by 300+ users to surface investment signals and improve decision-making.</li>
+              <li>Designed automation tools used by dozens of users to surface investment signals and improve decision-making.</li>
             </ul>
           </div>
         </div>
@@ -921,6 +954,7 @@
             <div class="fellowship-org">Cambridge, MA · Hacker House</div>
           </div>
           <div class="fellowship-desc">Lived and built at Harvard St. for 3+ months - a collaborative house for ambitious founders in Harvard Square. 150+ founders hosted, $50M raised by residents.</div>
+          <button class="fellowship-toggle" aria-label="Expand">+</button>
         </div>
         <div class="fellowship-item reveal">
           <div class="fellowship-left">
@@ -928,6 +962,7 @@
             <div class="fellowship-org">Mercatus Center · Tyler Cowen</div>
           </div>
           <div class="fellowship-desc">$2,500 grant for autonomous drone research. Invited to the 2024 UnConference in Washington, D.C.</div>
+          <button class="fellowship-toggle" aria-label="Expand">+</button>
         </div>
         <div class="fellowship-item reveal">
           <div class="fellowship-left">
@@ -935,6 +970,7 @@
             <div class="fellowship-org">Inflection Grants · Long Journey Ventures</div>
           </div>
           <div class="fellowship-desc">$2,000 grant through the Inflection Grants program - backed by Long Journey Ventures (Uber, SpaceX, Notion) for builders under 25.</div>
+          <button class="fellowship-toggle" aria-label="Expand">+</button>
         </div>
       </div>
     </section>
@@ -1393,6 +1429,17 @@
     });
   }, { threshold: 0.08 });
   reveals.forEach(el => obs.observe(el));
+
+  // ── FELLOWSHIP ACCORDION (mobile only) ──
+  document.querySelectorAll('.fellowship-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.fellowship-item');
+      const desc = item.querySelector('.fellowship-desc');
+      const isOpen = desc.classList.contains('open');
+      desc.classList.toggle('open', !isOpen);
+      btn.classList.toggle('open', !isOpen);
+    });
+  });
   </script>
 
 </body>
