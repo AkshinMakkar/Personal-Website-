@@ -686,15 +686,58 @@
     }
 
     @media (max-width: 640px) {
-      nav { padding: 0 20px; }
+      /* Nav */
+      nav { padding: 0 16px; height: 56px; }
+      .nav-links { gap: 16px; }
+      .nav-links a { font-size: 11px; }
+
+      /* Layout */
       main { padding: 0 20px; }
-      .exp-item { grid-template-columns: 1fr; gap: 6px; }
-      .fellowship-item { grid-template-columns: 1fr auto; gap: 8px; }
-      .fellowship-left { grid-column: 1; }
-      .fellowship-desc { display: none; }
-      .exp-date { padding-top: 0; }
-      .proj-item { grid-template-columns: 1fr auto; }
+      section { padding-top: 80px; }
+
+      /* Hero */
+      #hero { min-height: 100svh; }
+      h1 { font-size: 36px; letter-spacing: -1.5px; margin-bottom: 20px; }
+      .hero-bio { font-size: 15px; margin-bottom: 32px; }
+      .status-pill { margin-bottom: 24px; }
+      .hero-glow { width: 300px; height: 200px; left: -60px; }
+
+      /* Experience */
+      .exp-list { padding-left: 0; }
+      .exp-list::before { display: none; }
+      .exp-item { grid-template-columns: 1fr; gap: 4px; padding: 24px 0; }
+      .exp-item::before { display: none; }
+      .exp-date { padding-top: 0; font-size: 11px; margin-bottom: 6px; }
+      .exp-role { font-size: 14px; }
+      .exp-company { font-size: 13px; margin-bottom: 12px; }
+      .exp-bullets li { font-size: 13px; }
+
+      /* Projects */
+      .proj-grid { grid-template-columns: 1fr; }
+      .proj-item { padding: 20px; }
+      .proj-title { font-size: 16px; }
+      .proj-desc { font-size: 13px; }
       .proj-year { display: none; }
+
+      /* Fellowships */
+      .fellowship-item { grid-template-columns: 1fr; gap: 6px; padding: 20px 0; }
+      .fellowship-desc { display: none; }
+      .fellowship-name { font-size: 14px; }
+
+      /* Resources */
+      .resource-cols { grid-template-columns: 1fr; gap: 32px; }
+      .resource-item-name { font-size: 13px; }
+      .resource-item-sub { font-size: 12px; }
+
+      /* Section headers */
+      .section-wrap { margin-bottom: 32px; }
+      .section-ghost { display: none; }
+
+      /* Contact */
+      .contact-headline { font-size: 32px; letter-spacing: -1px; }
+      .contact-sub { font-size: 14px; }
+
+      /* Footer */
       footer { flex-direction: column; gap: 6px; padding: 24px; }
     }
   </style>
