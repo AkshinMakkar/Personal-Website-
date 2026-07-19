@@ -1,8 +1,8 @@
 # Akshin Makkar
 
+# I use a Claude.MD file when coding with Claude - it helps with output quality and enables a better context loop during coding sessions :) 
 ## Contact
 - Email: Amakkar5@uwo.ca
-- Phone: 647-261-2779
 - LinkedIn: https://www.linkedin.com/in/akshinmakkar
 - Devpost: https://devpost.com/akshinmakkar
 - Location: Mississauga, Ontario
