@@ -4,7 +4,6 @@
 ## Contact
 - Email: Amakkar5@uwo.ca
 - LinkedIn: https://www.linkedin.com/in/akshinmakkar
-- GitHub: https://github.com/AkshinMakkar
 - Devpost: https://devpost.com/akshinmakkar
 - Location: Mississauga, Ontario
 
