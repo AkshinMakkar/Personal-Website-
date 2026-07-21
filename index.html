@@ -515,9 +515,34 @@
       transition: transform 0.15s ease;
     }
 
-    .stick-waver:hover .arm-right {
+    .stick-waver:hover .arm-right,
+    .stick-waver.waving .arm-right {
       animation: stick-wave 0.55s ease-in-out infinite;
     }
+
+    .wave-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: "Inter", sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      background: none;
+      border: none;
+      border-radius: 100px;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: color 0.2s;
+      margin-left: 4px;
+      vertical-align: middle;
+      white-space: nowrap;
+      outline: none;
+    }
+
+    .wave-btn:hover { color: var(--fg); }
+
 
     @keyframes stick-wave {
       0%   { transform: rotate(0deg); }
@@ -879,6 +904,7 @@
             <line x1="9" y1="14" x2="5.5" y2="21" stroke="#f0f0ee" stroke-width="1.2" stroke-linecap="round"/>
             <line x1="9" y1="14" x2="12.5" y2="21" stroke="#f0f0ee" stroke-width="1.2" stroke-linecap="round"/>
           </svg>
+          <button class="wave-btn" id="waveBtn">Wave here!</button>
         </span></h1>
 
         <p class="hero-bio">
@@ -1513,6 +1539,12 @@
     });
   }, { threshold: 0.08 });
   reveals.forEach(el => obs.observe(el));
+
+  // ── WAVE BUTTON ──
+  const waveBtn = document.getElementById('waveBtn');
+  const stickWaver = document.querySelector('.stick-waver');
+  waveBtn.addEventListener('mouseenter', () => stickWaver.classList.add('waving'));
+  waveBtn.addEventListener('mouseleave', () => stickWaver.classList.remove('waving'));
 
   // ── FELLOWSHIP ACCORDION (mobile only) ──
   document.querySelectorAll('.fellowship-toggle').forEach(btn => {
